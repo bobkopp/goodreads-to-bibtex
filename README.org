@@ -1,0 +1,24 @@
+# goodreads-to-bibtex
+Simple Python tool to convert a Goodreads.com CSV file into BibTeX entries.
+
+* Install
+
+Clone this repository:
+
+#+begin_src shell
+git clone https://github.com/fgiasson/goodreads-to-bibtex.git
+#+end_src
+
+* Export
+
+First you have to download your GoodReads list of books [[https://www.goodreads.com/review/import][from this page]]. Save the
+generate CSV somewhere on your local computer. Then run this command to convert
+the list to BibTeX:
+
+#+begin_src shell
+python3 export.py ~/Downloads/goodreads_library_export.csv > goodreads.bib
+#+end_src
+
+* Documentation
+
+More documentation about how the exporter works is available in the Org-mode file: =org/export.org=
