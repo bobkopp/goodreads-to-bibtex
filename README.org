@@ -1,12 +1,14 @@
 # goodreads-to-bibtex
 Simple Python tool to convert a Goodreads.com CSV file into BibTeX entries.
 
+This has been adapted by Bob Kopp from https://github.com/fgiasson/goodreads-to-bibtex.git
+
 * Install
 
 Clone this repository:
 
 #+begin_src shell
-git clone https://github.com/fgiasson/goodreads-to-bibtex.git
+git clone https://github.com/bobkopp/goodreads-to-bibtex.git
 #+end_src
 
 * Export
@@ -18,6 +20,15 @@ the list to BibTeX:
 #+begin_src shell
 python3 export.py ~/Downloads/goodreads_library_export.csv > goodreads.bib
 #+end_src
+
+* Tips for importing into Zotero
+
+The outputted file is best imported into Zotero if you have the Better BibTeX plugin
+installed. With Better BibTeX, you can right-click on a set of items and
+select "Copy date-added/date-modified from extra field". This will set
+the Zotero 'date added' and 'date modified' to the original Goodreads date added
+and date read. Date read and rating will also be preserved in a note. Shelf
+information will be stored as tags.
 
 * Documentation
 
