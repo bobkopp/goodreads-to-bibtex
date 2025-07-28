@@ -2,6 +2,7 @@
 import csv
 import re
 import sys
+import unicodedata
 # Imports:1 ends here
 
 # [[file:org/export.org::*BibTex ID][BibTex ID:3]]
@@ -9,6 +10,17 @@ import sys
 # If an ID is duplicated, add one more meaningful word to the ID
 assigned_ids = set()
 
+
+def normalize_and_clean(text):
+    # Normalize the Unicode string
+    normalized_text = unicodedata.normalize('NFKD', text)
+    # Remove non-ASCII characters
+    ascii_text = normalized_text.encode('ascii', 'ignore').decode('ascii')
+    # Remove special characters
+    allowed_chars = set('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_ ')
+    new_text = ''.join(char for char in ascii_text if char in allowed_chars)
+    return new_text
+    
 def clean_title(title):
     """Keep all letters from the titles, and convert everything to spaces. Keep
     one space between words only"""
@@ -39,6 +51,7 @@ def bibtex_id(author, year, title, x=1):
         id = author.split(', ')[0].lower() + year + '_' + x_meaningful_words(title, x).lower()
     id = re.sub(r'\W+', '', id)
 
+    id = normalize_and_clean(id)
     if(x > 5):
         assigned_ids.add(id)
         return id
@@ -62,11 +75,28 @@ with open(sys.argv[1], newline='') as csvfile:
         author = row[3]
         additional_authors = row[4]
         isbn = row[5]
+        rating = row[7]
         publisher = row[9]
+        binding = row[10]
         pages = row[11]
         year = row[12]
         date_read = row[14]
         date_added = row[15]
+        bookshelf = row[16]
+        exclshelf = row[18]
+
+        note=""
+        if date_read:
+            note = str(note) + "Read: " + date_read + ". "
+        if rating:
+            note = str(note) + "Rating:  " + rating + ". "
+        
+        shelf=""
+        if exclshelf:
+            shelf = exclshelf
+        if bookshelf:
+            shelf = shelf + ", " + bookshelf
+
 
         print("@book{" + bibtex_id(author, year, title) + ",")
         print("    title = {" + title + "},")
@@ -83,8 +113,16 @@ with open(sys.argv[1], newline='') as csvfile:
         if year:
             print("    year = {" + year + "},")
         if date_read:
-            print("    date_read = {" + date_read + "},")
+            print("    date-read = {" + date_read + "},")
+        if date_read:
+            print("    date-modified = {" + date_read + "},")
         if date_added:
-            print("    date_added = {" + date_added + "},")
+            print("    date-added = {" + date_added + "},")
+        if rating:
+            print("    rating = {" + rating + "},")
+        if shelf:
+            print("    keywords = {" + shelf + "},")           
+        if note:
+            print("    note = {" + note + "},")
         print("}\n")
 # Export:1 ends here
